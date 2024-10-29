@@ -1,5 +1,6 @@
 import React, { useContext, useEffect } from 'react'
 import UserContext from '../Context/User/UserContext';
+import { toast } from 'sonner';
 
 const UserList = () => {
     const { users, getUsers, getProfile } = useContext(UserContext);
@@ -7,6 +8,16 @@ const UserList = () => {
     useEffect(() => {
         getUsers();
     }, []);
+
+    const deleteUser = async (id) => {
+        const res = await fetch(`https://reqres.in/api/users/${id}`, {
+            method: 'DELETE'
+        });
+
+        toast.success("User deleted successfully", {
+            description: `User with id: ${id} has been deleted`
+        });
+    }
 
 
     return (
@@ -19,6 +30,10 @@ const UserList = () => {
                             {
                                 `${user.first_name} ${user.last_name}`
                             }
+
+                            <button onClick={(e) => { e.stopPropagation(); deleteUser(user.id); }} className="btn btn-danger ml-2">
+                                Delete
+                            </button>
                         </p>
                     </a>
                 ))
